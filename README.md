@@ -25,7 +25,7 @@ pitch with the opponents he beat, the team-mates he had, and the option he left.
 
 ## Scale
 
-43,966 open-play passes, all 51 matches, 239 players with 60 or more passes.
+43,966 open-play passes, all 51 matches, 238 players with 60 or more passes.
 
 ## Does it find the right players?
 
@@ -55,6 +55,11 @@ best *visible* one, and will sometimes understate what a player could see.
 average against 3.0 elsewhere, because bodies are packed in there. The metric rewards crosses
 and cutbacks. This is a property of any packing-style measure, not a bug, but it matters when
 reading a forward's numbers against a midfielder's.
+
+**The ratio needs a denominator.** One player, an isolated striker, averaged 1.4 available
+options per pass against a typical 3.2, which pushed his ratio to 92% while nobody else cleared
+50%. That is the metric breaking down, not a finding, so players offered fewer than 2 options
+per pass are excluded.
 
 **Incision is not quality.** A centre-back recycling possession safely is doing his job and will
 sit low here. Goalkeepers are excluded entirely: their long distribution clears half a pitch and

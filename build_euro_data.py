@@ -5,6 +5,7 @@ CORRIDOR = 10.0
 MIN_PROG = 5.0
 SET_PIECE = {'Corner', 'Free Kick', 'Throw-in', 'Kick Off', 'Goal Kick'}
 MIN_PASSES = 60
+MIN_AVAIL = 2.0     # took% is unstable when almost nothing was on offer
 MIN_BYPASS = 4      # a pass worth showing takes out at least this many
 MIN_GAP = 3         # a miss worth showing left at least this many on the table
 MAX_BEST, MAX_MISS = 4, 3
@@ -159,7 +160,12 @@ for pid, rs in passes.items():
         'frames': sel,
     })
 
-# percentile within position group
+dropped = [p['name'] for p in players if p['avail'] < MIN_AVAIL]
+players = [p for p in players if p['avail'] >= MIN_AVAIL]
+if dropped:
+    print("dropped for too few options offered:", ", ".join(dropped))
+
+# percentile within position group (after filtering)
 KEYS = ['byp', 'avail', 'took', 'press', 'prog', 'comp']
 for g in set(p['pos'] for p in players):
     grp = [p for p in players if p['pos'] == g]

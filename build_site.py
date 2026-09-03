@@ -58,6 +58,10 @@ ul.list li[aria-selected=true]{background:#243A2E;box-shadow:inset 3px 0 0 var(-
 .who h2{font-size:30px;margin:0;line-height:1}
 .who .team{color:var(--chalk-dim)}
 .facts{color:var(--chalk-dim);font-size:14px;margin:2px 0 18px}
+.metric{margin-bottom:2px}
+.why{margin:1px 0 12px;font-size:12.5px;color:var(--chalk-dim);
+  max-width:76ch;line-height:1.45}
+@media(max-width:560px){.why{margin-bottom:14px}}
 .bar-row{display:grid;grid-template-columns:190px 1fr 96px;gap:10px;align-items:center;padding:3px 0}
 @media(max-width:560px){.bar-row{grid-template-columns:140px 1fr 84px}}
 .bar-lab{font-size:13.5px;color:var(--chalk-dim)}
@@ -67,7 +71,8 @@ ul.list li[aria-selected=true]{background:#243A2E;box-shadow:inset 3px 0 0 var(-
 .bar-val{text-align:right;font-variant-numeric:tabular-nums;font-size:13.5px}
 .raw{color:var(--chalk-dim);font-size:12px}
 h3{font-size:20px;margin:26px 0 4px}
-.hint{color:var(--chalk-dim);font-size:13.5px;margin:0 0 10px;max-width:70ch}
+.hint{color:var(--chalk-dim);font-size:13.5px;margin:0 0 14px;max-width:74ch}
+.hint b{color:var(--chalk);font-weight:600}
 .viewer{display:grid;grid-template-columns:1fr 210px;gap:18px;align-items:start}
 @media(max-width:760px){.viewer{grid-template-columns:1fr}}
 svg.pitch{width:100%;height:auto;display:block;background:var(--grass);
@@ -151,12 +156,18 @@ details p{margin:8px 0}
 <script>
 const DB = __DATA__, P = DB.players;
 const METRICS = [
-  ['byp',  'Opponents bypassed', ' per pass'],
-  ['avail','Best option offered', ' per pass'],
-  ['took', 'Took the option', '%'],
-  ['press','Nearest opponent', ' m'],
-  ['prog', 'Ball moved upfield', ' m'],
-  ['comp', 'Completion', '%'],
+  ['byp',  'Opponents bypassed', ' per pass',
+   'How many opponents his average pass leaves behind the ball.'],
+  ['avail','Best option offered', ' per pass',
+   'What the most incisive visible team-mate would have been worth. High means his team kept offering him forward options.'],
+  ['took', 'Took the option', '%',
+   'The share of what was on offer that he actually played. This is the decision reading: two players can face the same picture and choose differently.'],
+  ['press','Nearest opponent', ' m',
+   'His space at the moment of the pass. Low means he was playing in tight areas, which makes everything above harder.'],
+  ['prog', 'Ball moved upfield', ' m',
+   'How far towards the opponent goal his average pass moved the ball. Negative territory would mean he mostly played backwards.'],
+  ['comp', 'Completion', '%',
+   'Share of passes that reached a team-mate. Incision costs completion, so read this against the rows above rather than on its own.'],
 ];
 let sel = P[0], fi = 0;
 
@@ -198,17 +209,22 @@ function pitch(f){
 /* ---------------- detail ---------------- */
 function render(){
   const p=sel, f=p.frames[fi];
-  const bars=METRICS.map(([k,lab,unit])=>`
-    <div class="bar-row">
-      <span class="bar-lab">${lab}</span>
-      <span class="track"><span class="fill" style="width:${p.pct[k]}%"></span></span>
-      <span class="bar-val">${Math.round(p.pct[k])}<span class="raw"> / ${p[k]}${unit}</span></span>
+  const bars=METRICS.map(([k,lab,unit,why])=>`
+    <div class="metric">
+      <div class="bar-row">
+        <span class="bar-lab">${lab}</span>
+        <span class="track"><span class="fill" style="width:${p.pct[k]}%"></span></span>
+        <span class="bar-val">${Math.round(p.pct[k])}<span class="raw"> / ${p[k]}${unit}</span></span>
+      </div>
+      <p class="why">${why}</p>
     </div>`).join("");
 
   const missed=f.a>f.n;
   document.getElementById("detail").innerHTML=`
     <div class="who"><h2>${p.name}</h2><span class="team">${p.team}</span>${p.full&&p.full!==p.name?`<span class="raw">${p.full}</span>`:""}</div>
     <p class="facts">${p.pos} · ${p.passes} open-play passes · ${p.min} minutes</p>
+    <p class="hint">Two numbers on every row: his <b>percentile against other ${p.pos.toLowerCase()}s</b>
+       at this tournament, then the raw value. The bar shows the percentile.</p>
     ${bars}
     <h3>What he saw</h3>
     <p class="hint">His four most incisive passes and his three biggest missed options, where he had them.
