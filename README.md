@@ -15,8 +15,8 @@ For each pass:
 
 - An opponent is **taken out** if he sits between passer and target, inside a corridor 10 metres
   either side of the pass line.
-- The same calculation runs for every visible team-mate at least 5 metres further upfield. The
-  best of those is **what was on offer**.
+- The same calculation runs for every visible team-mate at least 5 metres further upfield, minus
+  anyone standing in an offside position. The best of those is **what was on offer**.
 - The ratio of the two, aggregated over a player's passes, is a read on how consistently he
   picks the incisive option.
 
@@ -25,7 +25,7 @@ pitch with the opponents he beat, the team-mates he had, and the option he left.
 
 ## Scale
 
-43,966 open-play passes, all 51 matches, 238 players with 60 or more passes.
+43,966 open-play passes, all 51 matches, 237 players with 60 or more passes.
 
 ## Does it find the right players?
 
@@ -33,13 +33,14 @@ Sorted by the share of what was available that a player actually took, within po
 
 | Position | Top of the list |
 |---|---|
-| Midfield | Dani Olmo, Georgiy Sudakov, Kevin De Bruyne |
-| Wide attacker | Cody Gakpo, Nico Williams, Jeremy Doku |
-| Full back | Dávid Hancko, Andrija Živković, Otar Kakabadze |
-| Centre forward | Memphis Depay, Kylian Mbappé |
+| Wide attacker | Dennis Man, Cody Gakpo, Nico Williams |
+| Centre forward | Memphis Depay, Harry Kane, Álvaro Morata |
+| Full back | Andrija Živković, Milos Kerkez, Vladimír Coufal |
+| Midfield | Tomáš Souček, Christoph Baumgartner, Timi Elšnik |
 
-Two Spain players from the winning side, De Bruyne, Doku, Dembélé, Gakpo. Nothing about the
-method knows who these players are.
+Gakpo and Nico Williams among the top three wingers, Depay and Kane leading the forwards. Dani
+Olmo and Kevin De Bruyne sit tenth and thirteenth of 87 midfielders, so the metric likes them
+without being infatuated. Nothing about the method knows who any of these players are.
 
 The pressure column is a second check. Average distance to the nearest opponent falls
 monotonically up the pitch: 6 to 8 metres for centre-backs, around 4 for full-backs, 3 to 4 in
@@ -55,6 +56,13 @@ best *visible* one, and will sometimes understate what a player could see.
 average against 3.0 elsewhere, because bodies are packed in there. The metric rewards crosses
 and cutbacks. This is a property of any packing-style measure, not a bug, but it matters when
 reading a forward's numbers against a midfielder's.
+
+**Offside had to be handled explicitly.** A team-mate in an offside position is not an option.
+Before that check was added, one in five of the best options the method found was an offside
+player, and the average option on offer was overstated by 9%. Whether a team-mate is offside is
+computed from the freeze frame: opponent half, ahead of the ball, and ahead of the second-last
+opponent, with goalkeepers included in that count. What this cannot see is a team-mate who was
+offside but would have been played onside by a team-mate's run, or the referee's actual call.
 
 **The ratio needs a denominator.** One player, an isolated striker, averaged 1.4 available
 options per pass against a typical 3.2, which pushed his ratio to 92% while nobody else cleared

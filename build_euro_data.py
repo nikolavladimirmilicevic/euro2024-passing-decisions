@@ -24,6 +24,13 @@ def bypass_list(src, dst, opps):
             out.append(i)
     return out
 
+def offside(m, src, all_opp):
+    """Offside position: in the opponent half, ahead of the ball, and ahead of
+    the second-last opponent. Keepers count, so they are kept in all_opp."""
+    if m[0] <= 60 or m[0] <= src[0]:
+        return False
+    return sum(1 for o in all_opp if o[0] >= m[0]) < 2
+
 def group(name):
     if name in ('Right Back', 'Left Back'): return 'Full Back'
     if 'Goalkeeper' in name: return 'Goalkeeper'
@@ -70,8 +77,9 @@ for path in sorted(glob.glob('/home/claude/euro/ev/*.json')):
             if not ff:
                 continue
             src, dst = ev['location'], p['end_location'][:2]
-            opps  = [q['location'] for q in ff if not q['teammate'] and not q['keeper']]
-            mates = [q['location'] for q in ff if q['teammate'] and not q['actor']]
+            opps    = [q['location'] for q in ff if not q['teammate'] and not q['keeper']]
+            all_opp = [q['location'] for q in ff if not q['teammate']]
+            mates   = [q['location'] for q in ff if q['teammate'] and not q['actor']]
             if not opps or not mates:
                 continue
 
@@ -79,6 +87,8 @@ for path in sorted(glob.glob('/home/claude/euro/ev/*.json')):
             best_n, best_t = 0, None
             for mm in mates:
                 if mm[0] - src[0] < MIN_PROG:
+                    continue
+                if offside(mm, src, all_opp):      # not a legal option
                     continue
                 b = len(bypass_list(src, mm, opps))
                 if b > best_n:
