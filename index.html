@@ -15,7 +15,7 @@
 <style>
 :root{
   --pitch:#0F1A15; --pitch-2:#16241D; --line:#2A3A32;
-  --chalk:#E9EFE8; --chalk-dim:#8FA096;
+  --chalk:#E9EFE8; --chalk-dim:#8FA096; --chalk-faint:#6B7C72;
   --signal:#E0A33E;      /* the player and his pass */
   --alt:#5FB6C4;         /* the option he did not take */
   --opp:#D2685C;         /* opponents */
@@ -53,13 +53,15 @@ ul.list li[aria-selected=true]{background:#243A2E;box-shadow:inset 3px 0 0 var(-
 .who h2{font-size:30px;margin:0;line-height:1}
 .who .team{color:var(--chalk-dim)}
 .facts{color:var(--chalk-dim);font-size:14px;margin:2px 0 18px}
-.metric{margin-bottom:2px}
-.why{margin:1px 0 12px;font-size:12.5px;color:var(--chalk-dim);
-  max-width:76ch;line-height:1.45}
+.metric{padding:9px 0 10px;border-bottom:1px solid #1E2C25}
+.metric:last-of-type{border-bottom:0}
+.why{margin:3px 0 0;font-size:12px;color:var(--chalk-faint);
+  max-width:78ch;line-height:1.5}
 @media(max-width:560px){.why{margin-bottom:14px}}
 .bar-row{display:grid;grid-template-columns:190px 1fr 96px;gap:10px;align-items:center;padding:3px 0}
 @media(max-width:560px){.bar-row{grid-template-columns:140px 1fr 84px}}
-.bar-lab{font-size:13.5px;color:var(--chalk-dim)}
+.bar-lab{font-family:"Barlow Condensed",Barlow,sans-serif;font-size:16.5px;
+  font-weight:600;color:var(--chalk);line-height:1.15;letter-spacing:.01em}
 .track{display:block;background:#0C1410;border:1px solid var(--line);height:14px;
   border-radius:2px;overflow:hidden}
 .fill{display:block;height:100%;background:var(--signal);opacity:.9}
