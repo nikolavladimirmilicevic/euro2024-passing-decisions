@@ -206,7 +206,7 @@ function render(){
 
   const missed=f.a>f.n;
   document.getElementById("detail").innerHTML=`
-    <div class="who"><h2>${p.name}</h2><span class="team">${p.team}</span></div>
+    <div class="who"><h2>${p.name}</h2><span class="team">${p.team}</span>${p.full&&p.full!==p.name?`<span class="raw">${p.full}</span>`:""}</div>
     <p class="facts">${p.pos} · ${p.passes} open-play passes · ${p.min} minutes</p>
     ${bars}
     <h3>What he saw</h3>
@@ -252,7 +252,7 @@ function paint(){
   rows.sort(by==="name"?(a,b)=>a.name.localeCompare(b.name):(a,b)=>b[by]-a[by]);
   document.getElementById("list").innerHTML=rows.map(p=>
     `<li role="option" tabindex="0" data-id="${p.id}" aria-selected="${p.id===sel.id}">
-      <span>${p.name.split(" ").slice(-2).join(" ")}</span><span class="li-meta">${p.team}</span></li>`).join("")
+      <span>${p.name}</span><span class="li-meta">${p.team}</span></li>`).join("")
     || `<li style="color:var(--chalk-dim)">Nobody matches that search.</li>`;
   document.getElementById("count").textContent=rows.length+(rows.length===1?" player":" players");
   document.querySelectorAll("#list li[data-id]").forEach(li=>{
