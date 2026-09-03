@@ -5,7 +5,9 @@ CORRIDOR = 10.0
 MIN_PROG = 5.0
 SET_PIECE = {'Corner', 'Free Kick', 'Throw-in', 'Kick Off', 'Goal Kick'}
 MIN_PASSES = 60
-N_BEST, N_MISS = 4, 3
+MIN_BYPASS = 4      # a pass worth showing takes out at least this many
+MIN_GAP = 3         # a miss worth showing left at least this many on the table
+MAX_BEST, MAX_MISS = 4, 3
 
 def bypass_list(src, dst, opps):
     """Indices of opponents taken out by a pass from src to dst."""
@@ -97,6 +99,25 @@ for path in sorted(glob.glob('/home/claude/euro/ev/*.json')):
             })
 
 POS = {k: v.most_common(1)[0][0] for k, v in posc.items()}
+
+# official short names from the line-up files, with a fallback rule
+NICK = {}
+for path in glob.glob('/home/claude/euro/lu/*.json'):
+    for t in json.load(open(path)):
+        for pl in t['lineup']:
+            NICK[pl['player_id']] = pl.get('player_nickname') or None
+
+PARTICLE = {'van','von','de','del','della','di','da','dos','das','du','le','la',
+            'el','al','ben','bin','mac','mc',"o'",'ter','ten','op'}
+def short(full):
+    parts = full.split()
+    if len(parts) <= 2:
+        return full
+    for i in range(1, len(parts)):
+        if parts[i].lower() in PARTICLE:
+            return parts[0] + ' ' + ' '.join(parts[i:i+2])
+        return parts[0] + ' ' + parts[i]
+    return full
 NAME, TEAM = {}, {}
 for path in sorted(glob.glob('/home/claude/euro/ev/*.json'))[:1]:
     pass
@@ -113,15 +134,22 @@ for pid, rs in passes.items():
     n = len(rs)
     ch = sum(r[0] for r in rs); be = sum(r[1] for r in rs)
     fs = frames[pid]
-    best = sorted(fs, key=lambda f: (-f['n'], -f['a']))[:N_BEST]
-    miss = sorted([f for f in fs if f['b']], key=lambda f: -(f['a']-f['n']))[:N_MISS]
+    best = [f for f in fs if f['n'] >= MIN_BYPASS]
+    best = sorted(best, key=lambda f: (-f['n'], -f['a']))[:MAX_BEST]
+    miss = [f for f in fs if f['b'] and (f['a'] - f['n']) >= MIN_GAP]
+    miss = sorted(miss, key=lambda f: -(f['a'] - f['n']))[:MAX_MISS]
     seen, sel = set(), []
     for f in best + miss:
         k = (f['v'], tuple(f['s']))
         if k not in seen:
             seen.add(k); sel.append(f)
+    if len(sel) < 2:   # nothing notable: show his two most incisive anyway
+        sel = sorted(fs, key=lambda f: -f['n'])[:2]
     players.append({
-        'id': pid, 'name': NAME.get(pid, str(pid)), 'team': TEAM.get(pid, ''),
+        'id': pid,
+        'name': NICK.get(pid) or short(NAME.get(pid, str(pid))),
+        'full': NAME.get(pid, str(pid)),
+        'team': TEAM.get(pid, ''),
         'pos': POS[pid], 'passes': n, 'min': round(mins.get(pid, 0)),
         'byp': round(ch/n, 3), 'avail': round(be/n, 3),
         'took': round(100*ch/be, 1) if be else 0,
@@ -151,4 +179,6 @@ json.dump(out, open('/home/claude/euro_site.json', 'w'), ensure_ascii=False,
 
 print(f"{len(players)} players, {out['meta']['passes_analysed']:,} passes analysed")
 print("by position:", collections.Counter(p['pos'] for p in players).most_common())
+print("frames per player:", sorted(collections.Counter(len(p['frames']) for p in players).items()))
+print("frames with 0 bypassed:", sum(1 for p in players for f in p['frames'] if f['n'] == 0))
 print("size: %.1f MB" % (os.path.getsize('/home/claude/euro_site.json')/1e6))

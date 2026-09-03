@@ -61,8 +61,9 @@ ul.list li[aria-selected=true]{background:#243A2E;box-shadow:inset 3px 0 0 var(-
 .bar-row{display:grid;grid-template-columns:190px 1fr 96px;gap:10px;align-items:center;padding:3px 0}
 @media(max-width:560px){.bar-row{grid-template-columns:140px 1fr 84px}}
 .bar-lab{font-size:13.5px;color:var(--chalk-dim)}
-.track{background:#0C1410;border:1px solid var(--line);height:14px;border-radius:2px;overflow:hidden}
-.fill{height:100%;background:var(--signal);opacity:.9}
+.track{display:block;background:#0C1410;border:1px solid var(--line);height:14px;
+  border-radius:2px;overflow:hidden}
+.fill{display:block;height:100%;background:var(--signal);opacity:.9}
 .bar-val{text-align:right;font-variant-numeric:tabular-nums;font-size:13.5px}
 .raw{color:var(--chalk-dim);font-size:12px}
 h3{font-size:20px;margin:26px 0 4px}
@@ -210,7 +211,8 @@ function render(){
     <p class="facts">${p.pos} · ${p.passes} open-play passes · ${p.min} minutes</p>
     ${bars}
     <h3>What he saw</h3>
-    <p class="hint">Each frame is one real pass. Red is an opponent, brighter red if the pass
+    <p class="hint">His four most incisive passes and his three biggest missed options, where he had them.
+       Each frame is one real pass. Red is an opponent, brighter red if the pass
        took him out of the game. Grey is a team-mate. Gold is the pass he played. A dashed blue
        line is the option that would have taken out more.</p>
     <div class="viewer">
