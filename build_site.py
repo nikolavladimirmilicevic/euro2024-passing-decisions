@@ -115,7 +115,7 @@ details p{margin:8px 0}
   <p class="sub">Every open-play pass at the tournament, measured two ways: how many opponents
   it actually took out, and how many the <b>best available option</b> would have taken out.
   The gap between those is a read on decision making. Built from
-  <b>43,966 passes</b> across all 51 matches, using StatsBomb 360 freeze frames.
+  <b>43,818 passes</b> across all 51 matches, using StatsBomb 360 freeze frames.
   Offside team-mates are not counted as options.</p>
 </header>
 
@@ -151,7 +151,8 @@ details p{margin:8px 0}
     <p>A team-mate standing in an offside position is not an option, so he is not counted.
        Without that check one in five of the best options found was an offside player, which
        inflated what everyone appeared to be missing by roughly a tenth.</p>
-    <p>Set pieces are excluded, as are goalkeepers, whose long distribution clears half a pitch
+    <p>Passes the referee called back, 147 ruled offside and 56 injury clearances, are dropped:
+       a pass that did not stand did not beat anyone. Set pieces are excluded, as are goalkeepers, whose long distribution clears half a pitch
        and would not be comparable. Players need at least 60 open-play passes. Percentiles are
        within position group, because a centre-back and a winger are not solving the same problem.</p>
     <p>Two honest limitations. The camera does not see the whole pitch, so options outside the
