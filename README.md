@@ -25,7 +25,7 @@ pitch with the opponents he beat, the team-mates he had, and the option he left.
 
 ## Scale
 
-43,966 open-play passes, all 51 matches, 237 players with 60 or more passes.
+43,818 open-play passes, all 51 matches, 237 players with 60 or more passes.
 
 ## Does it find the right players?
 
@@ -63,6 +63,10 @@ player, and the average option on offer was overstated by 9%. Whether a team-mat
 computed from the freeze frame: opponent half, ahead of the ball, and ahead of the second-last
 opponent, with goalkeepers included in that count. What this cannot see is a team-mate who was
 offside but would have been played onside by a team-mate's run, or the referee's actual call.
+
+**A pass the referee wiped out is not a line break.** The 147 passes ruled offside, and 56
+injury clearances, are excluded. They are a rounding error at 0.3% of all passes, but crediting
+a player for beating opponents with a pass that was called back is simply wrong.
 
 **The ratio needs a denominator.** One player, an isolated striker, averaged 1.4 available
 options per pass against a typical 3.2, which pushed his ratio to 92% while nobody else cleared
