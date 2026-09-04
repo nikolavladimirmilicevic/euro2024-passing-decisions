@@ -4,6 +4,8 @@ import json, math, glob, os, collections
 CORRIDOR = 10.0
 MIN_PROG = 5.0
 SET_PIECE = {'Corner', 'Free Kick', 'Throw-in', 'Kick Off', 'Goal Kick'}
+# a pass the referee wiped out did not really take anyone out of the game
+VOID = {'Pass Offside', 'Injury Clearance'}
 MIN_PASSES = 60
 MIN_AVAIL = 2.0     # took% is unstable when almost nothing was on offer
 MIN_BYPASS = 4      # a pass worth showing takes out at least this many
@@ -72,6 +74,8 @@ for path in sorted(glob.glob('/home/claude/euro/ev/*.json')):
         elif t == 'Pass':
             p = ev['pass']
             if p.get('type', {}).get('name') in SET_PIECE:
+                continue
+            if p.get('outcome', {}).get('name') in VOID:
                 continue
             ff = FR.get(ev['id'])
             if not ff:
